@@ -10,22 +10,50 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+def env_list(name, default=''):
+    return [item.strip() for item in os.environ.get(name, default).split(',') if item.strip()]
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-p44gvh&wj!+bqj1t7locx*qha!-!+tx&2a=3u+mmk3ru-t9e74'
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-p44gvh&wj!+bqj1t7locx*qha!-!+tx&2a=3u+mmk3ru-t9e74',
+)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Em producao (Vercel) DEBUG fica desligado por padrao; localmente fica ligado.
+DEBUG = os.environ.get(
+    'DEBUG', '0' if os.environ.get('VERCEL') else '1'
+).lower() in ('1', 'true', 'yes')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', 'localhost,127.0.0.1')
+
+# Hosts used by Vercel deployments (production and preview).
+for vercel_host in ('VERCEL_URL', 'VERCEL_PROJECT_PRODUCTION_URL'):
+    if os.environ.get(vercel_host):
+        ALLOWED_HOSTS.append(os.environ[vercel_host])
+if not DEBUG:
+    ALLOWED_HOSTS += ['.vercel.app']
+
+CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS')
+for vercel_host in ('VERCEL_URL', 'VERCEL_PROJECT_PRODUCTION_URL'):
+    if os.environ.get(vercel_host):
+        CSRF_TRUSTED_ORIGINS.append(f'https://{os.environ[vercel_host]}')
+
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 
 # Application definition
@@ -38,10 +66,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "alunos",
+    "professor",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -73,12 +103,26 @@ WSGI_APPLICATION = 'escola.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Em producao (Vercel + Neon) a conexao vem de DATABASE_URL.
+# Em desenvolvimento, sem DATABASE_URL, usa SQLite.
+DATABASE_URL = os.environ.get('DATABASE_URL') or os.environ.get('POSTGRES_URL')
+
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -116,11 +160,35 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# WhiteNoise serve os arquivos estaticos caso a CDN do Vercel nao pegue.
+# Em producao o Vercel roda collectstatic e publica os arquivos na CDN.
+if DEBUG:
+    STORAGES = {
+        'default': {
+            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        },
+        'staticfiles': {
+            'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        },
+    }
+else:
+    STORAGES = {
+        'default': {
+            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        },
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        },
+    }
+WHITENOISE_MAX_AGE = 31536000
 
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
+# Django 6.1+ usa MAILERS; em producao o backend de console nao envia nada.
 MAILERS = {
     'default': {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',

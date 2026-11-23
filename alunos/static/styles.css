@@ -73,7 +73,23 @@ main {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
+.lista-professor {
+    overflow-x: auto;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
 .lista-alunos h1 {
+    color: #16734b;
+    padding-top: 24px;
+}
+
+.lista-alunos .link {
+    color: #16734b;
+}
+
+.lista-professor h1 {
     color: #16734b;
     padding-top: 24px;
 }
@@ -81,6 +97,27 @@ main {
 table {
     width: 100%;
     border-collapse: collapse;
+}
+
+.lista-filtro {
+    max-width: none;
+    display: flex;
+    gap: 8px;
+    padding: 0 24px 16px;
+}
+
+.lista-filtro input {
+    margin: 0;
+}
+
+.lista-filtro button {
+    min-width: 120px;
+    border: 0;
+    border-radius: 6px;
+    background: #16734b;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
 }
 
 th,

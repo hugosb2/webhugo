@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Professor</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <main>
+        <form method="POST">
+            {% csrf_token %}
+            <h1>Formulario de Cadastro de Professores</h1>
+            <input type="text" name="cpf" placeholder="CPF do professor" maxlength="11" required><br>
+            <input type="text" name="nome" placeholder="Nome do professor" required><br>
+            <input type="number" name="idade" placeholder="Idade do professor" min="0" required><br>
+            <input type="email" name="email" placeholder="Email do professor" required><br>
+            <input type="text" name="siape" placeholder="SIAPE do professor" required><br>
+            <input type="text" name="telefone" placeholder="Telefone do professor" required><br>
+            <input type="text" name="endereco" placeholder="Endereco do professor" required><br>
+            <input type="submit" value="Cadastrar">
+        </form>
+        <a class="link" href="{% url 'listar_professor' %}">Listar professores</a>
+    </main>
+</body>
+</html>

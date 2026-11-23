@@ -10,6 +10,10 @@
 <body>
     <main class="lista-alunos">
         <h1>Alunos cadastrados</h1>
+        <form class="lista-filtro" method="GET" action="{% url 'listar_alunos' %}">
+            <input type="text" name="nome" value="{{ request.GET.nome }}" placeholder="Pesquisar por nome">
+            <button type="submit">Pesquisar</button>
+        </form>
         <table>
             <thead>
                 <tr>

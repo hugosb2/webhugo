@@ -1,0 +1,96 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    font-family: system-ui, sans-serif;
+    background: #16734b;
+}
+
+form {
+    width: 100%;
+    max-width: 420px;
+}
+
+h1 {
+    margin: 0 0 24px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 24px;
+}
+
+input {
+    width: 100%;
+    margin: 0 0 12px;
+    padding: 12px;
+    border: 1px solid #c8d3cd;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+input:focus {
+    border-color: #16734b;
+    outline: 2px solid #b9dfce;
+}
+
+input[type="submit"] {
+    margin-top: 8px;
+    border: 0;
+    background: #00c003;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background: #00fd3f;
+}
+
+main {
+    width: 100%;
+    max-width: 1000px;
+}
+
+.link {
+    display: block;
+    width: fit-content;
+    margin: 16px auto 0;
+    color: #ffffff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.lista-alunos {
+    overflow-x: auto;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.lista-alunos h1 {
+    color: #16734b;
+    padding-top: 24px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #dce4df;
+    text-align: left;
+}
+
+th {
+    background: #dff1e7;
+    color: #135a3b;
+}
