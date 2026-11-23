@@ -51,3 +51,46 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background: #00fd3f;
 }
+
+main {
+    width: 100%;
+    max-width: 1000px;
+}
+
+.link {
+    display: block;
+    width: fit-content;
+    margin: 16px auto 0;
+    color: #ffffff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.lista-alunos {
+    overflow-x: auto;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.lista-alunos h1 {
+    color: #16734b;
+    padding-top: 24px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #dce4df;
+    text-align: left;
+}
+
+th {
+    background: #dff1e7;
+    color: #135a3b;
+}

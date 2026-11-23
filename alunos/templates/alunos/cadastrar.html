@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <body>
+    <main>
         <form method="POST">
         {% csrf_token %}
             <h1>Formulário de Cadastro de Alunos</h1>
@@ -20,5 +21,7 @@
             <input type="text" name="endereco" placeholder="Endereço do aluno"><br>
             <input type="submit" value="Cadastrar">
         </form>
+        <a class="link" href="{% url 'listar_alunos' %}">Listar alunos</a>
+    </main>
 </body>
 </html>
